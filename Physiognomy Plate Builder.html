@@ -1,0 +1,325 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Physiognomy Plate Builder</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Literata:opsz,wght@7..72,400;7..72,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: an engraver's work table — option plates on the left, the finished prompt pinned on a sheet at right. */
+:root{
+  --paper:#ECEDE7; --sheet:#F8F8F4; --ink:#1C2029; --muted:#5B6170; --rule:#C7C9C0;
+  --prussian:#23477A; --prussian-soft:#DDE4EF; --on-prussian:#F8F8F4;
+  --display:"IM Fell English", "Iowan Old Style", Georgia, serif;
+  --caps:"IM Fell English SC", "IM Fell English", Georgia, serif;
+  --body:"Literata", Georgia, "Times New Roman", serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#13161C; --sheet:#1B1F27; --ink:#E5E6E1; --muted:#9BA1AE; --rule:#2E3340;
+  --prussian:#93B3E2; --prussian-soft:#223150; --on-prussian:#11141A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#13161C; --sheet:#1B1F27; --ink:#E5E6E1; --muted:#9BA1AE; --rule:#2E3340;
+  --prussian:#93B3E2; --prussian-soft:#223150; --on-prussian:#11141A; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
+.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+header{display:flex;flex-direction:column;gap:6px;border-bottom:1px solid var(--rule);padding-bottom:18px}
+.eyebrow{font-family:var(--caps);letter-spacing:.12em;color:var(--prussian);font-size:14px}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,5vw,48px);line-height:1.05;margin:0;text-wrap:balance}
+h1 i{color:var(--prussian)}
+.lede{color:var(--muted);max-width:68ch;margin:0}
+
+.grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+
+.controls{display:flex;flex-direction:column;gap:26px;min-width:0}
+fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;min-width:0}
+legend{font-family:var(--caps);font-size:17px;letter-spacing:.06em;padding:0;margin-bottom:10px;display:flex;gap:10px;align-items:baseline;width:100%}
+legend .fig{font-family:var(--display);font-style:italic;color:var(--prussian);font-size:15px;letter-spacing:0}
+legend .hint{margin-left:auto;font-family:var(--body);font-size:12.5px;color:var(--muted);letter-spacing:0}
+
+.types{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.type{appearance:none;text-align:left;background:var(--sheet);color:var(--ink);border:1px solid var(--rule);border-radius:3px;
+  padding:10px 11px;cursor:pointer;display:flex;flex-direction:column;gap:2px;font:inherit;min-height:74px}
+.type .no{font-family:var(--display);font-style:italic;font-size:12px;color:var(--muted)}
+.type .ft{font-family:var(--display);font-size:16.5px;line-height:1.15}
+.type .ty{font-size:12px;color:var(--muted)}
+.type:hover{border-color:var(--prussian)}
+.type[aria-pressed="true"]{background:var(--prussian);border-color:var(--prussian);color:var(--on-prussian)}
+.type[aria-pressed="true"] .ty,.type[aria-pressed="true"] .no{color:var(--on-prussian);opacity:.82}
+
+.row{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px 16px}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--muted);letter-spacing:.02em;min-width:0}
+select,textarea,input[type=text]{font:inherit;font-size:14.5px;color:var(--ink);background:var(--sheet);border:1px solid var(--rule);border-radius:3px;padding:8px 10px;width:100%}
+textarea{resize:vertical;min-height:62px}
+select:focus-visible,textarea:focus-visible,input:focus-visible,button:focus-visible{outline:2px solid var(--prussian);outline-offset:2px}
+
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{appearance:none;font:inherit;font-size:13.5px;background:var(--sheet);color:var(--ink);border:1px solid var(--rule);border-radius:999px;padding:6px 13px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--prussian-soft);border-color:var(--prussian);color:var(--ink)}
+
+.checks{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px}
+.checks label{display:flex;gap:7px;align-items:center;cursor:pointer}
+input[type=checkbox]{accent-color:var(--prussian);width:16px;height:16px}
+input[type=range]{accent-color:var(--prussian);width:100%}
+
+.out{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);background:var(--sheet);border:1px solid var(--rule);border-radius:4px;
+  box-shadow:0 1px 0 var(--rule),0 18px 40px -28px rgba(0,0,0,.45);display:flex;flex-direction:column;min-width:0}
+@media (max-width:900px){.out{position:static}}
+.out-head{padding:16px 18px 12px;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:10px}
+.plate-title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.plate-title b{font-family:var(--display);font-weight:400;font-size:24px}
+.plate-title span{font-family:var(--display);font-style:italic;color:var(--prussian)}
+.traits{font-size:12.5px;color:var(--muted)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tabs button{appearance:none;font:inherit;font-size:12.5px;background:transparent;border:1px solid var(--rule);color:var(--muted);border-radius:3px;padding:5px 9px;cursor:pointer}
+.tabs button[aria-pressed="true"]{color:var(--ink);border-color:var(--ink)}
+.blk{padding:14px 18px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--rule);min-width:0}
+.blk:last-child{border-bottom:0}
+.blk-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.blk-h h2{margin:0;font-family:var(--caps);font-weight:400;font-size:14px;letter-spacing:.1em;color:var(--muted)}
+pre{margin:0;font-family:var(--mono);font-size:12.8px;line-height:1.6;white-space:pre-wrap;word-break:break-word;color:var(--ink);
+  max-height:46vh;overflow:auto}
+.btn{appearance:none;font:inherit;font-size:13px;border-radius:3px;padding:6px 12px;cursor:pointer;border:1px solid var(--prussian);background:var(--prussian);color:var(--on-prussian)}
+.btn.ghost{background:transparent;color:var(--prussian)}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.meta{font-size:12px;color:var(--muted)}
+.toast{font-size:12px;color:var(--prussian);min-height:1em}
+
+footer{border-top:1px solid var(--rule);padding-top:14px;color:var(--muted);font-size:13px;max-width:80ch}
+footer i{font-family:var(--display)}
+@media (prefers-reduced-motion:no-preference){.type,.seg button{transition:background .15s,border-color .15s}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">After Lavater, 1775–78 · a casting tool</div>
+    <h1>Physiognomy <i>Plate</i> Builder</h1>
+    <p class="lede">Pick a facial type, set the sitter and the medium, and copy a prompt formatted for your image model. The types are a visual-storytelling convention for how a face reads on screen, not a claim about real personality.</p>
+  </header>
+
+  <div class="grid">
+    <div class="controls">
+      <fieldset>
+        <legend>Facial type <span class="fig">Plate I</span><span class="hint">15 types from the chart</span></legend>
+        <div class="types" id="types"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>The sitter <span class="fig">Plate II</span></legend>
+        <div class="row">
+          <label class="f">Sex<select id="sex"></select></label>
+          <label class="f">Age<select id="age"></select></label>
+          <label class="f">Heritage / appearance<select id="heritage"></select></label>
+          <label class="f">Hair<select id="hair"></select></label>
+          <label class="f">Wardrobe<select id="wardrobe"></select></label>
+          <label class="f">Feature emphasis
+            <input type="range" id="intensity" min="1" max="3" step="1" value="2">
+            <span class="meta" id="intensityLbl"></span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Medium <span class="fig">Plate III</span></legend>
+        <div class="seg" id="style"></div>
+        <span class="meta" id="styleNote"></span>
+      </fieldset>
+
+      <fieldset>
+        <legend>Light &amp; composition <span class="fig">Plate IV</span></legend>
+        <div class="row">
+          <label class="f">Lighting<select id="lighting"></select></label>
+          <label class="f">Head angle<select id="angle"></select></label>
+          <label class="f">Framing<select id="framing"></select></label>
+          <label class="f">Background<select id="bg"></select></label>
+          <label class="f">Aspect ratio<select id="ar"></select></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Finishing <span class="fig">Plate V</span></legend>
+        <div class="checks">
+          <label><input type="checkbox" id="useTraits" checked> Add character mood words</label>
+          <label><input type="checkbox" id="useExpr" checked> Use the type's expression and gaze</label>
+          <label><input type="checkbox" id="noText" checked> No text or captions in image</label>
+        </div>
+        <label class="f">Extra details (optional)<textarea id="extra" placeholder="e.g. small scar through the left eyebrow, silver earring, freckles"></textarea></label>
+        <div class="btns">
+          <button class="btn ghost" id="shuffle" type="button">Random sitter</button>
+          <button class="btn ghost" id="reset" type="button">Reset to defaults</button>
+        </div>
+      </fieldset>
+    </div>
+
+    <aside class="out" aria-live="polite">
+      <div class="out-head">
+        <div class="plate-title"><b id="oFeature"></b><span id="oType"></span></div>
+        <div class="traits" id="oTraits"></div>
+        <div class="tabs" id="models" role="group" aria-label="Image model"></div>
+      </div>
+      <div class="blk">
+        <div class="blk-h"><h2>Prompt</h2><button class="btn" id="copyP" type="button">Copy prompt</button></div>
+        <pre id="prompt"></pre>
+      </div>
+      <div class="blk" id="negBlk">
+        <div class="blk-h"><h2>Negative prompt</h2><button class="btn ghost" id="copyN" type="button">Copy</button></div>
+        <pre id="neg"></pre>
+      </div>
+      <div class="blk">
+        <div class="blk-h"><h2>Whole series</h2><button class="btn ghost" id="copyAll" type="button">Copy all 15</button></div>
+        <span class="meta">The same sitter settings applied to every type, one prompt per line. Keep the seed fixed across them for a matching set.</span>
+        <span class="toast" id="toast" role="status"></span>
+      </div>
+    </aside>
+  </div>
+
+  <footer>
+    <i>Note.</i> Lavater's book is real; the 15-type chart circulating online is a modern AI-made infographic, and physiognomy has no scientific support. Use these types the way casting directors and illustrators do: as a shorthand for how a face will read to an audience.
+  </footer>
+</div>
+
+<script>
+const TYPES=[
+ {f:"High Forehead",t:"Intellectual",traits:["intelligent","reflective","idealistic"],look:"a high, broad, smooth forehead with the hairline set well back",expr:"a thoughtful, absorbed expression",gaze:"eyes lifted slightly upward, lost in thought"},
+ {f:"Low Forehead",t:"Instinctive",traits:["practical","sensual","earthy"],look:"a low forehead with a close hairline and strong, level brows",expr:"a grounded, unguarded expression",gaze:"a direct, steady stare at the viewer"},
+ {f:"Deep-Set Eyes",t:"Observant",traits:["analytical","reserved","perceptive"],look:"deep-set eyes shadowed under a pronounced brow ridge",expr:"a quiet, scrutinising expression",gaze:"eyes slightly narrowed, studying the viewer"},
+ {f:"Large, Open Eyes",t:"Emotional",traits:["sensitive","compassionate","dreamy"],look:"large, wide-open eyes with visible upper lids and long lashes",expr:"a soft, open, slightly vulnerable expression",gaze:"a gentle, glistening gaze, lips barely parted"},
+ {f:"Small Eyes",t:"Self-Controlled",traits:["disciplined","secretive","strong-willed"],look:"small, narrow almond eyes and a composed, closed mouth",expr:"a guarded, contained expression",gaze:"half-lidded eyes giving nothing away"},
+ {f:"Straight Nose",t:"Balanced",traits:["rational","calm","reliable"],look:"a long, straight nose with an even bridge in a symmetrical face",expr:"a calm, neutral expression",gaze:"a level, frontal gaze"},
+ {f:"Hooked Nose",t:"Determined",traits:["ambitious","persistent","dominant"],look:"a prominent aquiline nose with a strong, sculpted profile",expr:"jaw set, brows slightly lowered",gaze:"eyes fixed on something far off-frame"},
+ {f:"Turned-Up Nose",t:"Optimistic",traits:["cheerful","confident","sociable"],look:"a small upturned nose and rounded cheeks",expr:"a wide, genuine smile",gaze:"bright eyes, head tilted playfully"},
+ {f:"Thin Lips",t:"Reserved",traits:["thoughtful","self-contained","intellectual"],look:"thin, tightly drawn lips and a narrow mouth",expr:"a contained, faintly serious expression",gaze:"a cool, considered look"},
+ {f:"Full Lips",t:"Passionate",traits:["passionate","expressive","warm"],look:"full, soft, well-defined lips",expr:"lips slightly parted, intense and warm",gaze:"a direct, smouldering gaze"},
+ {f:"Angular Face",t:"Strong-Willed",traits:["determined","courageous","independent"],look:"an angular face with sharp cheekbones and hollow planes",expr:"firm brows and a set mouth",gaze:"an unflinching stare"},
+ {f:"Round Face",t:"Peaceful",traits:["kind","gentle","optimistic"],look:"a round face with full, soft cheeks",expr:"a serene, faintly kind smile",gaze:"a relaxed, friendly gaze"},
+ {f:"Thin Face",t:"Sensitive",traits:["sensitive","introverted","idealistic"],look:"a long, thin face with hollow cheeks and fine bone structure",expr:"a melancholy, inward expression",gaze:"eyes looking slightly past the viewer"},
+ {f:"Square Jaw",t:"Assertive",traits:["strong","practical","leader"],look:"a wide, square jaw and a strong chin on a thick neck",expr:"a confident, composed expression",gaze:"chin up, a steady commanding gaze"},
+ {f:"Soft Features",t:"Compassionate",traits:["empathetic","nurturing","peaceful"],look:"soft, rounded features with gentle arched brows",expr:"a tender, open expression",gaze:"head tilted slightly, warm eyes"}
+];
+const OPT={
+ sex:[["woman","Woman"],["man","Man"],["person","Unspecified"]],
+ age:[["in their early twenties","20s"],["in their thirties","30s"],["in their forties","40s"],["in their fifties","50s"],["in their late sixties","60s +"]],
+ heritage:[["","Unspecified"],["Persian (Iranian)","Persian"],["Arab","Arab"],["Turkish","Turkish"],["South Asian","South Asian"],["East Asian","East Asian"],["Southeast Asian","Southeast Asian"],["West African","West African"],["East African","East African"],["Mediterranean European","Mediterranean"],["Northern European","Northern European"],["Eastern European","Eastern European"],["Latin American","Latin American"],["Indigenous American","Indigenous American"]],
+ hair:[["loose dark curls","Loose dark curls"],["wavy shoulder-length brown hair","Wavy, shoulder-length"],["long straight black hair","Long straight"],["hair pulled back into a low bun","Pulled back bun"],["short cropped hair","Short cropped"],["thick tousled hair swept back","Swept back"],["close-shaved head","Close-shaved"],["thinning grey hair","Thinning grey"],["auburn waves","Auburn waves"]],
+ wardrobe:[["period-neutral loose linen shirt with an open collar","Period-neutral linen"],["bare shoulders","Bare shoulders"],["18th-century coat with a white cravat","1780s coat & cravat"],["18th-century gown with a fichu","1780s gown & fichu"],["19th-century high collar and dark waistcoat","19th-century collar"],["plain contemporary dark crew-neck","Contemporary plain"]],
+ lighting:[["soft studio light from the upper left","Soft upper-left"],["Rembrandt lighting with a small triangle of light on the shadow cheek","Rembrandt"],["chiaroscuro candlelight from one side, deep shadows","Candle chiaroscuro"],["diffuse overcast window light","Overcast window"],["low-key light with a thin rim light on the hair","Rim light"]],
+ angle:[["three-quarter view","Three-quarter"],["frontal view","Frontal"],["strict side profile","Profile"],["three-quarter view with the head tilted slightly up","Tilted up"]],
+ framing:[["head and shoulders","Head & shoulders"],["tight close-up of the face","Close-up"],["bust down to mid-chest","Bust"]],
+ bg:[["vignette fading into blank paper","Paper vignette"],["plain dark background","Plain dark"],["mottled painted studio backdrop","Painted backdrop"],["inside an engraved oval frame","Oval frame"]],
+ ar:[["1:1","1:1 square"],["4:5","4:5 portrait"],["2:3","2:3 portrait"],["3:4","3:4 portrait"]]
+};
+const STYLES={
+ oil:{n:"Neoclassical oil sketch",s:"soft oil-and-graphite portrait study on toned paper, delicate cross-hatching in the shadows, muted umber, sepia and rose skin tones, visible paper grain, unfinished edges dissolving into the paper, late-18th-century academic draftsmanship",neg:"photograph, glossy skin, plastic, 3D render, cartoon, anime, oversaturated, heavy makeup",note:"The look of the viral chart."},
+ engr:{n:"Copperplate engraving",s:"18th-century copperplate engraving, fine parallel and cross-hatched burin lines, stipple shading on the skin, black ink on cream laid paper, book-plate illustration in the manner of a 1780s physiognomy treatise",neg:"color, photograph, painterly brushstrokes, soft airbrush, cartoon, anime, gradient shading",note:"Closest to the plates in Lavater's actual book."},
+ sil:{n:"Cut-paper silhouette",s:"black cut-paper silhouette portrait in strict profile, crisp clean edge, mounted on pale laid paper, 18th-century shade portrait as used by Lavater",neg:"facial detail, color, photograph, frontal view, three-quarter view, shading inside the silhouette",note:"Forces a strict profile; noses, foreheads, lips and jaws read best here."},
+ chalk:{n:"Red chalk study",s:"red chalk (sanguine) drawing with white chalk highlights on warm laid paper, soft modelling and hatching, Old Master life-study sheet",neg:"photograph, full color, digital painting, cartoon, anime, hard outlines",note:"Old Master study sheet."},
+ photo:{n:"Cinematic casting photo",s:"cinematic portrait photograph, 85mm lens at f/2, shallow depth of field, natural skin texture with pores, subtle film grain, casting-session headshot",neg:"illustration, painting, drawing, cartoon, CGI, plastic skin, beauty filter, heavy retouching",note:"For casting boards and film pre-production."},
+ qajar:{n:"Qajar court portrait",s:"19th-century Qajar Persian oil portrait, flat jewel-toned background, rich brocade textiles with gold detailing, crisp contour drawing, decorative stylised modelling, Tehran court painting tradition",neg:"photograph, 3D render, cartoon, anime, European academic shading, modern clothing",note:"Swaps the European plate for a Persian court style."}
+};
+const MODELS={nl:"GPT-Image / Gemini",flux:"Flux",mj:"Midjourney",sd:"SDXL"};
+const INT=["subtle, naturalistic","clearly readable","pronounced, almost caricatural"];
+const DEF={type:6,sex:"man",age:"in their thirties",heritage:"",hair:"thick tousled hair swept back",wardrobe:"period-neutral loose linen shirt with an open collar",style:"oil",lighting:"soft studio light from the upper left",angle:"three-quarter view",framing:"head and shoulders",bg:"vignette fading into blank paper",ar:"4:5",intensity:2,model:"nl",useTraits:true,useExpr:true,noText:true,extra:""};
+let S={...DEF};
+try{const saved=JSON.parse(localStorage.getItem("plate-builder")||"null");if(saved)S={...DEF,...saved}}catch(e){}
+
+const $=id=>document.getElementById(id);
+function save(){try{localStorage.setItem("plate-builder",JSON.stringify(S))}catch(e){}}
+
+// build controls
+$("types").innerHTML=TYPES.map((t,i)=>`<button type="button" class="type" data-i="${i}" aria-pressed="false"><span class="no">No. ${["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV"][i]}</span><span class="ft">${t.f}</span><span class="ty">${t.t} type</span></button>`).join("");
+$("types").addEventListener("click",e=>{const b=e.target.closest(".type");if(!b)return;S.type=+b.dataset.i;sync()});
+for(const k of ["sex","age","heritage","hair","wardrobe","lighting","angle","framing","bg","ar"]){
+  $(k).innerHTML=OPT[k].map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
+  $(k).addEventListener("change",()=>{S[k]=$(k).value;sync()});
+}
+$("style").innerHTML=Object.entries(STYLES).map(([k,v])=>`<button type="button" data-k="${k}" aria-pressed="false">${v.n}</button>`).join("");
+$("style").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.style=b.dataset.k;sync()});
+$("models").innerHTML=Object.entries(MODELS).map(([k,v])=>`<button type="button" data-k="${k}" aria-pressed="false">${v}</button>`).join("");
+$("models").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.model=b.dataset.k;sync()});
+$("intensity").addEventListener("input",()=>{S.intensity=+$("intensity").value;sync()});
+for(const k of ["useTraits","useExpr","noText"])$(k).addEventListener("change",()=>{S[k]=$(k).checked;sync()});
+$("extra").addEventListener("input",()=>{S.extra=$("extra").value;sync()});
+$("reset").addEventListener("click",()=>{S={...DEF};sync()});
+$("shuffle").addEventListener("click",()=>{
+  const pick=a=>a[Math.floor(Math.random()*a.length)][0];
+  Object.assign(S,{sex:pick(OPT.sex.slice(0,2)),age:pick(OPT.age),heritage:pick(OPT.heritage),hair:pick(OPT.hair),wardrobe:pick(OPT.wardrobe)});sync();
+});
+
+function parts(i){
+  const t=TYPES[i],st=STYLES[S.style];
+  const sil=S.style==="sil";
+  const angle=sil?"strict side profile":S.angle;
+  const who=[S.heritage,S.sex].filter(Boolean).join(" ");
+  const subj=`a fictional ${who} ${S.age}`;
+  return {t,st,sil,angle,subj,
+    feature:`${t.look}, ${INT[S.intensity-1]}`,
+    expr:S.useExpr&&!sil?`${t.expr}; ${t.gaze}`:"",
+    mood:S.useTraits?`the face should read as ${t.t.toLowerCase()}: ${t.traits.join(", ")}`:"",
+    extra:S.extra.trim()};
+}
+function negFor(st){
+  const base="watermark, signature, deformed features, asymmetrical eyes, extra limbs, duplicate face, blurry, low detail";
+  return `${st.neg}, ${S.noText?"text, caption, letters, ":""}${base}`;
+}
+function build(i){
+  const p=parts(i),st=p.st;
+  const hair=p.sil?`${S.hair} shown in outline`:S.hair;
+  if(S.model==="mj"){
+    const bits=[`${S.framing} portrait of ${p.subj}`,p.feature,p.expr,`${hair}`,`${S.wardrobe}`,p.mood?p.t.traits.join(", ")+" character":"",p.extra,st.s,p.sil?"":S.lighting,p.angle,S.bg].filter(Boolean);
+    const no=negFor(st).split(", ").slice(0,10).join(", ");
+    return {p:`${bits.join(", ")} --ar ${S.ar} --style raw --stylize 150 --no ${no}`,n:null};
+  }
+  if(S.model==="sd"){
+    const bits=[st.s.split(", ").slice(0,4).join(", "),`${S.framing} portrait`,`fictional ${[S.heritage,S.sex].filter(Boolean).join(" ")} ${S.age}`,`(${p.t.look}:${[1.15,1.3,1.45][S.intensity-1]})`,p.expr?`(${p.t.expr}:1.1)`:"",p.expr?p.t.gaze:"",hair,S.wardrobe,p.mood?p.t.traits.join(", "):"",p.extra,p.sil?"":S.lighting,p.angle,S.bg,"masterpiece, fine detail"].filter(Boolean);
+    return {p:bits.join(", "),n:negFor(st)+", lowres, bad anatomy, jpeg artifacts"};
+  }
+  // natural language (GPT-Image, Gemini) and Flux
+  const s1=`A ${S.framing} portrait of ${p.subj}, rendered as ${st.s}.`;
+  const s2=`Defining feature: ${p.feature}.`+(p.mood?` Overall, ${p.mood}.`:"");
+  const s3=p.expr?`Expression: ${p.expr}.`:"";
+  const s4=`Hair: ${hair}. Clothing: ${S.wardrobe}.`;
+  const s5=`Composition: ${p.angle}, ${p.sil?"":S.lighting+", "}${S.bg}, centered, ${S.ar} aspect ratio.`;
+  const s6=p.extra?`Details: ${p.extra}.`:"";
+  const s7=S.model==="flux"?"":`Keep realistic anatomy and proportions${S.noText?"; no text, captions or watermark anywhere in the image":""}.`;
+  return {p:[s1,s2,s3,s4,s5,s6,s7].filter(Boolean).join(" "),n:S.model==="flux"?null:null};
+}
+
+function sync(){
+  document.querySelectorAll(".type").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.i===S.type));
+  document.querySelectorAll("#style button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===S.style));
+  document.querySelectorAll("#models button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===S.model));
+  for(const k of ["sex","age","heritage","hair","wardrobe","lighting","angle","framing","bg","ar"])$(k).value=S[k];
+  $("angle").disabled=S.style==="sil";$("lighting").disabled=S.style==="sil";
+  $("intensity").value=S.intensity;$("intensityLbl").textContent=INT[S.intensity-1];
+  for(const k of ["useTraits","useExpr","noText"])$(k).checked=S[k];
+  if($("extra").value!==S.extra)$("extra").value=S.extra;
+  $("styleNote").textContent=STYLES[S.style].note;
+  const t=TYPES[S.type];
+  $("oFeature").textContent=t.f;$("oType").textContent=`${t.t} type`;
+  $("oTraits").textContent=t.traits.join(" · ");
+  const r=build(S.type);
+  $("prompt").textContent=r.p;
+  const negShown=S.model==="sd"||S.model==="flux";
+  $("negBlk").hidden=!negShown;
+  $("neg").textContent=S.model==="sd"?r.n:negFor(STYLES[S.style]);
+  if(S.model==="flux"){$("negBlk").querySelector("h2").textContent="Avoid list (Flux ignores negatives; use only if your UI supports them)"}
+  else $("negBlk").querySelector("h2").textContent="Negative prompt";
+  save();
+}
+function flash(m){$("toast").textContent=m;clearTimeout(flash.t);flash.t=setTimeout(()=>$("toast").textContent="",2200)}
+async function copy(text,el,msg){
+  try{await navigator.clipboard.writeText(text);flash(msg)}
+  catch(e){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);flash("Selected. Press Ctrl/Cmd+C to copy.")}
+}
+$("copyP").addEventListener("click",()=>copy($("prompt").textContent,$("prompt"),"Prompt copied."));
+$("copyN").addEventListener("click",()=>copy($("neg").textContent,$("neg"),"Negative prompt copied."));
+$("copyAll").addEventListener("click",()=>{
+  const all=TYPES.map((t,i)=>`${i+1}. ${t.f} (${t.t})\n${build(i).p}`).join("\n\n");
+  copy(all,$("prompt"),"All 15 prompts copied.");
+});
+sync();
+</script>
+
+</body></html>
